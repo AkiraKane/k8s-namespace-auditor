@@ -204,29 +204,29 @@ def _audit_pod(pod: dict, result: AuditResult):
                 recommendation="Add CPU and memory requests for proper scheduling"
             ))
 
-        # Check for host network
-        if pod.get("spec", {}).get("hostNetwork"):
-            result.issues.append(SecurityIssue(
-                severity="high",
-                category="host_network",
-                resource_type="Pod",
-                resource_name=name,
-                namespace=namespace,
-                description="Pod using host network",
-                recommendation="Remove hostNetwork: true unless absolutely necessary"
-            ))
+    # Check for host network (pod-level field, checked once per pod)
+    if pod.get("spec", {}).get("hostNetwork"):
+        result.issues.append(SecurityIssue(
+            severity="high",
+            category="host_network",
+            resource_type="Pod",
+            resource_name=name,
+            namespace=namespace,
+            description="Pod using host network",
+            recommendation="Remove hostNetwork: true unless absolutely necessary"
+        ))
 
-        # Check for host PID
-        if pod.get("spec", {}).get("hostPID"):
-            result.issues.append(SecurityIssue(
-                severity="high",
-                category="host_pid",
-                resource_type="Pod",
-                resource_name=name,
-                namespace=namespace,
-                description="Pod using host PID namespace",
-                recommendation="Remove hostPID: true unless absolutely necessary"
-            ))
+    # Check for host PID (pod-level field, checked once per pod)
+    if pod.get("spec", {}).get("hostPID"):
+        result.issues.append(SecurityIssue(
+            severity="high",
+            category="host_pid",
+            resource_type="Pod",
+            resource_name=name,
+            namespace=namespace,
+            description="Pod using host PID namespace",
+            recommendation="Remove hostPID: true unless absolutely necessary"
+        ))
 
 
 def _audit_deployment(deployment: dict, result: AuditResult):
